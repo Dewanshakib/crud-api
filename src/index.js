@@ -327,10 +327,10 @@ app.get("/tasks/:id", (req, res) => {
 
 app.post("/tasks", (req, res) => {
   const { title } = req.body;
-  if (!title || title.trim() === "") {
+  if (!title || typeof title !== "string" || title.trim() === "") {
     return res.status(400).json({ error: "title is required" });
   }
-  const nextId = tasks.length + 1;
+  const nextId = tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1;
   const newTask = { id: nextId, title: title.trim(), done: false };
   tasks.push(newTask);
   return res.status(201).json(newTask);
@@ -344,8 +344,11 @@ app.put("/tasks/:id", (req, res) => {
   }
   const { title, done } = req.body;
 
-  if (!title || title.trim() === "") {
-    return res.status(400).json({ error: "title must be a non-empty string" });
+  if (title !== undefined) {
+    if (typeof title !== "string" || title.trim() === "") {
+      return res.status(400).json({ error: "title must be a non-empty string" });
+    }
+    task.title = title.trim();
   }
 
   if (done !== undefined) {
