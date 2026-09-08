@@ -3,6 +3,11 @@
 A small CRUD API for managing tasks, built with Express. Includes an OpenAPI
 specification and an interactive Swagger UI documentation page.
 
+## Assignment Context
+
+**W2 · A1 — CRUD API** for the
+FlyRank AI Internship.
+
 ## What it is
 
 `Task API` is a REST API that lets you create, read, update, and delete tasks.
