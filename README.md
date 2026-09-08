@@ -60,6 +60,16 @@ Interactive documentation is served at `/docs`. Open
 The OpenAPI 3.0 specification is defined inline in `src/index.js`
 (`openapiSpec` constant) and served to Swagger UI via `swagger-ui-express`.
 
+## Screenshots
+
+### Swagger UI
+
+![Swagger UI](screenshots/crud_api_swagger_doc.png)
+
+### cURL CRUD output
+
+![cURL output](screenshots/curl_crud_output.png)
+
 ## Notes
 
 - `id` values are assigned sequentially from the highest existing id, so they
