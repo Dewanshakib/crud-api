@@ -11,9 +11,10 @@ Each task has an `id` (number), a `title` (string), and a `done` flag (boolean).
 
 ## Install & Run
 
+Install the dependencies and start the server in one command:
+
 ```bash
-pnpm install
-pnpm start
+pnpm install && pnpm start
 ```
 
 The server starts on `http://localhost:3000` (override the port with the `PORT`
