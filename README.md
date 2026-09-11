@@ -5,14 +5,28 @@ specification and an interactive Swagger UI documentation page.
 
 ## Assignment Context
 
-**W2 · A1 — CRUD API** for the
+**W3 · A2 — CRUD API** for the
 FlyRank AI Internship.
 
 ## What it is
 
 `Task API` is a REST API that lets you create, read, update, and delete tasks.
-Tasks are stored in memory (in a list in `src/index.js`) — no database needed.
 Each task has an `id` (number), a `title` (string), and a `done` flag (boolean).
+
+## Why SQLite
+
+SQLite was chosen because:
+
+- **Lightweight** — it's a single file on disk, no server or daemon to run.
+- **Zero configuration** — no installation or setup beyond the npm package.
+- **Persistent** — data survives server restarts, unlike in-memory storage.
+- **SQL-powered** — you can query, filter, and aggregate data directly.
+
+## Where the database is stored
+
+The database file is `tasks.db`, located in the project root directory.
+It is created automatically on first run and is added to `.gitignore`
+so it is never committed.
 
 ## Install & Run
 
@@ -24,6 +38,9 @@ pnpm install && pnpm start
 
 The server starts on `http://localhost:3000` (override the port with the `PORT`
 environment variable, e.g. `PORT=8080 pnpm start`).
+
+The database file `tasks.db` is created automatically the first time
+the server starts — no manual setup needed.
 
 ## Endpoints
 
@@ -75,6 +92,22 @@ The OpenAPI 3.0 specification is defined inline in `src/index.js`
 ### cURL CRUD output
 
 ![cURL output](screenshots/curl_crud_output.png)
+
+### SQLite database viewer
+
+![SQLite database viewer](screenshots/crud_api_sql_cmd.png)
+
+## Example SQL query
+
+The following query was executed in DB Browser for SQLite to list all incomplete
+tasks. It returns the task `title` and a `completed` column:
+
+```sql
+SELECT title, done as completed FROM tasks WHERE done = 0;
+```
+
+This query returns every task where `done` equals `0` (not completed), as shown
+in the database viewer screenshot above.
 
 ## Notes
 
