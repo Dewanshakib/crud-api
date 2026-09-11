@@ -326,7 +326,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/health", (req, res) => {
-  return res.json({ status: "ok" });
+  const health = db.prepare(`SELECT 1`);
+  return res.json({ status: health ? "ok" : "Not ok" });
 });
 
 app.get("/tasks", (req, res) => {
