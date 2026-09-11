@@ -332,12 +332,14 @@ app.get("/health", (req, res) => {
 });
 
 app.get("/tasks", (req, res) => {
+  const tasks = db.prepare(`SELECT * FROM tasks`).all();
+
   return res.json(tasks);
 });
 
 app.get("/tasks/:id", (req, res) => {
   const taskId = parseInt(req.params.id);
-  const task = tasks.find((t) => t.id === taskId);
+  const task = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(taskId);
   if (!task) {
     return res.status(404).json({ error: `Task ${taskId} not found` });
   }
