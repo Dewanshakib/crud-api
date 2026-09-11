@@ -351,9 +351,9 @@ app.post("/tasks", (req, res) => {
   if (!title || typeof title !== "string" || title.trim() === "") {
     return res.status(400).json({ error: "title is required" });
   }
-  const nextId = tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1;
-  const newTask = { id: nextId, title: title.trim(), done: false };
-  tasks.push(newTask);
+  const insert = db.prepare(`INSERT INTO tasks (title) VALUES (?)`);
+  const newTask = insert.run(title.trim());
+
   return res.status(201).json(newTask);
 });
 
