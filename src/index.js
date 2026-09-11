@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-
 const db = new Database("tasks.db");
 
 db.exec(`
@@ -18,7 +17,6 @@ db.exec(`
     done INTEGER NOT NULL DEFAULT 0
   )
 `);
-
 
 const count = db.prepare("SELECT COUNT(*) AS count FROM tasks").get();
 if (count.count === 0) {
@@ -359,36 +357,34 @@ app.post("/tasks", (req, res) => {
 
 app.put("/tasks/:id", (req, res) => {
   const taskId = parseInt(req.params.id);
-  const task = tasks.find((t) => t.id === taskId);
+  const task = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(taskId);
   if (!task) {
     return res.status(404).json({ error: `Task ${taskId} not found` });
   }
   const { title, done } = req.body;
 
-  if (title !== undefined) {
-    if (typeof title !== "string" || title.trim() === "") {
-      return res.status(400).json({ error: "title must be a non-empty string" });
-    }
-    task.title = title.trim();
+  if (!title || !done) {
+    return res.status(400).json({ error: "Please enter your title or done" });
   }
 
-  if (done !== undefined) {
-    if (typeof done !== "boolean") {
-      return res.status(400).json({ error: "done must be a boolean" });
-    }
-    task.done = done;
-  }
-  return res.json(task);
+  const update = db.prepare(
+    `UPDATE tasks SET title = ?, done = ? WHERE id = ?`
+  );
+  const result = update.run(title, done, taskId);
+
+  return res.json(result);
 });
 
 app.delete("/tasks/:id", (req, res) => {
   const taskId = parseInt(req.params.id);
-  const idx = tasks.findIndex((t) => t.id === taskId);
-  if (idx === -1) {
+  const task = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(taskId);
+  if (!task) {
     return res.status(404).json({ error: `Task ${taskId} not found` });
   }
-  tasks.splice(idx, 1);
-  return res.status(204).send();
+  const deleted = db.prepare(`DELETE FROM tasks WHERE id = ?`);
+  const result = deleted.run(taskId);
+
+  return res.status(204).send(result.changes);
 });
 
 app.listen(PORT, () => {
